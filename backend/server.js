@@ -3,7 +3,15 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const pool = require('./db');
 const authRoutes=require('./Auth/authRoutes');
-const protectedRoutes=require('./Auth/protectedRoutes')
+const protectedRoutes=require('./Auth/protectedRoutes');
+const departmentRoutes=require('./routes/departmentRoutes')
+
+
+
+
+
+
+
 const app = express();
 const port = process.env.PORT || 5000;
 dotenv.config();
@@ -23,11 +31,13 @@ app.get('/test-connection', async (req, res) => {
 });
 
 
-// Register routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
+app.use('/api/departments',departmentRoutes)
 
-//Log in routes
+
+
 
 
 
