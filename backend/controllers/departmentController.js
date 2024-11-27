@@ -38,7 +38,7 @@ const getAllDepartmentsById=async(req,res)=>{
 
 const updateDepartment=async(req,res)=>{
     const{department_id}=req.params;
-    const{name,description,managed_by}=req.params;
+    const{name,description,managed_by}=req.body;
     try{
         const updatedDep=await Department.updateDep(department_id,{
             name,
@@ -57,19 +57,23 @@ const updateDepartment=async(req,res)=>{
 };
 
 
-const deleteDepartment=async(req,res)=>{
-    const{department_id}=req.params;
-    try{
-        const deletedDep=await Department.deleteDep(department_id);
-        if(!deletedDep){
-           res.status(404).json({message:"department not found"})
+const deleteDepartment = async (req, res) => {
+    const { department_id } = req.params;
+    try {
+        const deletedDep = await Department.deleteDep(department_id);
+        if (!deletedDep) {
+            return res.status(404).json({ message: "Department not found" });
         }
-        res.status(200).json(deletedDep)
-    }catch(error){
-        console.error("error deleting department");
-        res.status(200).json({message:"error deleting "})
+        res.status(200).json({
+            message: "Department deleted successfully",
+            deletedDep
+        });
+    } catch (error) {
+        console.error("Error deleting department", error.message);
+        res.status(500).json({ message: "Error deleting department" });
     }
-}
+};
+
 
 module.exports={
     createDepartment,

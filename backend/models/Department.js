@@ -21,15 +21,18 @@ const Department={
 
     updateDep:async(department_id,{name,description,managed_by})=>{
         const result=await pool.query('UPDATE departments SET name=$1,description=$2,managed_by=$3 WHERE department_id=$4 RETURNING *',
-            [name,description,managed_by]);
+            [name,description,managed_by,department_id]);
         return result.rows[0]
     },
 
-    deleteDep:async(department_id)=>{
-        const result=await pool.query('DELETE departments WHERE department_id=$1 RETURNING *',
-            [department_id]);
-        return result.rows[0]
-    }
+    deleteDep: async (department_id) => {
+        const result = await pool.query(
+            'DELETE FROM departments WHERE department_id = $1 RETURNING *',
+            [department_id]
+        );
+        return result.rows[0];
+    },
+
 
 
 };
