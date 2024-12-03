@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const pool = require('./db');
 const authRoutes=require('./Auth/authRoutes');
 const protectedRoutes=require('./Auth/protectedRoutes');
-const departmentRoutes=require('./routes/departmentRoutes')
+const departmentRoutes=require('./routes/departmentRoutes');
+const employeeRoutes=require('./routes/employeeRoutes')
 
 
 
@@ -34,7 +35,8 @@ app.get('/test-connection', async (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
-app.use('/api/departments',departmentRoutes)
+app.use('/api/departments',departmentRoutes);
+app.use('/api/employees',employeeRoutes)
 
 
 
