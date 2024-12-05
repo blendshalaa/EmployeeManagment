@@ -5,9 +5,9 @@ const pool=require('../db')
 
 
 const Employee={
-    createEmp:async({name,email,department_id,hire_date,created_at})=>{
-        const result=await pool.query('INSERT into employees(name,email,department_id,hire_date,created_at)VALUES($1,$2,$3,$4,$5) RETURNING*',
-            [name,email,department_id,hire_date,created_at]);
+    createEmp:async({name,email,department_id,hire_date})=>{
+        const result=await pool.query('INSERT into employees(name,email,department_id,hire_date)VALUES($1,$2,$3,$4) RETURNING*',
+            [name,email,department_id,hire_date]);
         return result.rows[0]
     },
     getAllEmp:async()=>{

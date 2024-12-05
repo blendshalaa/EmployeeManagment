@@ -9,9 +9,9 @@ const authMiddleware = (req, res, next) => {
     }
 
     try {
-        // Verify the token and directly assign decoded data to req.user
-        req.user = jwt.verify(token, process.env.JWT_SECRET);
-        next();  // Proceed to the next middleware or route handler
+        // Verify the token and assign decoded data to req.user
+        req.user = jwt.verify(token, process.env.JWT_SECRET); // Ensure token has `user_id`
+        next(); // Proceed to the next middleware or route handler
     } catch (error) {
         return res.status(401).json({ message: 'Token is not valid' });
     }

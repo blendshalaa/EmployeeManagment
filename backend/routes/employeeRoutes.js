@@ -10,11 +10,11 @@ router.post('/',employeeController.createEmployee);
 
 router.get('/',employeeController.getAllEmployees);
 
-router.get('/:employees_id',employeeController.getEmployeesId);
+router.get('/:employee_id',employeeController.getEmployeesId);
 
-router.put('/:employees_id',employeeController.updateEmployees);
+router.put('/:employee_id',employeeController.updateEmployees);
 
-router.delete('/:employees_id',employeeController.deleteEmployees);
+router.delete('/:employee_id',employeeController.deleteEmployees);
 
 
 
