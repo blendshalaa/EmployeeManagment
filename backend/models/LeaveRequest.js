@@ -2,7 +2,7 @@ const pool=require('../db')
 
 const LeaveRequest={
     createLeaveReq:async({employee_id,start_date,end_date,status,request_date,approved_by})=>{
-        const result=await pool.query('INSERT into leave_requests(start_date,end_date,status,request_date,approved_by) VALUES($1,$2,$3,$4,$5,$6) RETURNING *',
+        const result=await pool.query('INSERT into leave_requests(employee_id,start_date,end_date,status,request_date,approved_by) VALUES($1,$2,$3,$4,$5,$6) RETURNING *',
             [employee_id,start_date,end_date,status,request_date,approved_by]);
         return result.rows[0]
     },
