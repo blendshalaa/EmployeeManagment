@@ -1,4 +1,6 @@
 
+import './styles/index.css';
+
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import HomePage from "./pages/HomePage.jsx";
 import NotFound from "./components/NotFound.jsx";
