@@ -1,8 +1,11 @@
 import React from 'react';
+import Navbar from "../components/Navbar.jsx";
 
 function Employees() {
     return (
-        <div>TESTT</div>
+        <div>
+            <Navbar/>
+            </div>
     );
 }
 

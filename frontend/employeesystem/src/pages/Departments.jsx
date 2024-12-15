@@ -1,8 +1,11 @@
 import React from 'react';
+import Navbar from "../components/Navbar.jsx";
 
 function Departments() {
     return (
-        <div></div>
+        <div>
+            <Navbar/>
+        </div>
     );
 }
 
