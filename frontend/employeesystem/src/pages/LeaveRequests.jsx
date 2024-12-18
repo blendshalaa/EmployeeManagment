@@ -30,7 +30,11 @@ function LeaveRequests() {
                     <ul>
                         {leaveRequests.map(leaveRequest=>(
                             <li key={leaveRequest.request_id}>
-                                {leaveRequest.start_date}
+                                <div>{leaveRequest.employee_id}</div>
+                                <div>{leaveRequest.start_date}</div>
+                                <div>{leaveRequest.end_date}</div>
+                                <div>{leaveRequest.status}</div>
+                                <div>{leaveRequest.request_date}</div>
                             </li>
                         ))}
                     </ul>

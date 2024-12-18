@@ -4,7 +4,11 @@ import axios from "axios";
 function Departments() {
 
     const[departments,setDepartments]=useState([]);
-    const[depName,setDepName]=useState("");
+  const[newDepartment,setNewDepartment]=useState({
+      name:"",
+      description:"",
+      managed_by:""
+  })
 
 
     useEffect(() => {
@@ -21,6 +25,33 @@ function Departments() {
 
       fetchDepartments();
     }, []);
+
+
+    //create a department
+
+
+    const handleSubmit=async(e)=>{
+        try{
+            const response=await axios.post("http://localhost:5000/api/departments",newDepartment);
+            setDepartments([...departments,response.data]);
+            setNewDepartment({
+                name:"",
+                description:"",
+                managed_by:""
+            })
+
+        }catch (error){
+            console.error("error creating department",error)
+        }
+    }
+
+
+    const handleInputChange=(e)=>{
+        setNewDepartment({
+            ...newDepartment,
+            [e.target.name]:e.target.value
+        });
+    };
 
 
 
