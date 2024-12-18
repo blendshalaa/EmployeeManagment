@@ -40,11 +40,11 @@ const getEmployeesId=async(req,res)=>{
 
 const updateEmployees=async(req,res)=>{
     const{employee_id}=req.params;
-    const{name,email,department_id,hire_date}=req.body;
+    const{name,email,department_id,hire_date,role}=req.body;
 
     try{
         const updatedEmployee=await Employee.updateEmp(employee_id,{
-            name,email,department_id,hire_date
+            name,email,department_id,hire_date,role
         });
         if(!updatedEmployee){
          res.status(404).json({message:"Employee does not exist"})
