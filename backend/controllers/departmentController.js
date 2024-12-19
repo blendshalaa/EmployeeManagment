@@ -38,12 +38,13 @@ const getAllDepartmentsById=async(req,res)=>{
 
 const updateDepartment=async(req,res)=>{
     const{department_id}=req.params;
-    const{name,description,managed_by}=req.body;
+    const{name,description,managed_by,location}=req.body;
     try{
         const updatedDep=await Department.updateDep(department_id,{
             name,
             description,
-            managed_by
+            managed_by,
+            location
         });
         if(!updatedDep){
             return res.status(404).json({ message: "department not found" });

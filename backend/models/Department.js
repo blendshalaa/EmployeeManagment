@@ -4,8 +4,8 @@ const pool = require('../db');
 
 const Department={
     createDep:async({name,description,managed_by})=>{
-        const result=await pool.query('INSERT into departments(name,description,managed_by)VALUES($1,$2,$3)RETURNING *',
-            [name,description,managed_by]);
+        const result=await pool.query('INSERT into departments(name,description,managed_by,location)VALUES($1,$2,$3,$4)RETURNING *',
+            [name,description,managed_by,location]);
         return result.rows[0]
     },
   getAllDep:async()=>{
@@ -19,9 +19,9 @@ const Department={
        return result.rows[0]
    },
 
-    updateDep:async(department_id,{name,description,managed_by})=>{
-        const result=await pool.query('UPDATE departments SET name=$1,description=$2,managed_by=$3 WHERE department_id=$4 RETURNING *',
-            [name,description,managed_by,department_id]);
+    updateDep:async(department_id,{name,description,managed_by,location})=>{
+        const result=await pool.query('UPDATE departments SET name=$1,description=$2,managed_by=$3,location=$4 WHERE department_id=$5 RETURNING *',
+            [name,description,managed_by,location,department_id]);
         return result.rows[0]
     },
 
