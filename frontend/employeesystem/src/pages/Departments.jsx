@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Navbar from "../components/Navbar.jsx";
 import axios from "axios";
+import DepartmentCard from "../components/DepartmentCard.jsx";
 function Departments() {
 
     const[departments,setDepartments]=useState([]);
@@ -57,21 +58,14 @@ function Departments() {
 
     return (
         <div>
-            <Navbar />
-            <div className="pt-20 p-4">
-                {departments.length === 0 ? (
-                    <p>No departments to display</p>
-                ) : (
-                    <ul>
-                        {departments.map(department => (
-                            <li key={department.department_id}>
-                                <div>{department.name}</div>
-                                <div>{department.description}</div>
-                                <div>{department.managed_by}</div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
+            <Navbar/>
+            <div className="pt-24 pl-4 pr-4 md:pl-24 md:pr-24">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Departments</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {departments.map((department) => (
+                        <DepartmentCard key={department.id} department={department}/>
+                    ))}
+                </div>
             </div>
         </div>
     );
