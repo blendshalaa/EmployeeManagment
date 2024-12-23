@@ -3,7 +3,7 @@ const pool = require('../db');
 
 
 const Department={
-    createDep:async({name,description,managed_by})=>{
+    createDep:async({name,description,managed_by,location})=>{
         const result=await pool.query('INSERT into departments(name,description,managed_by,location)VALUES($1,$2,$3,$4)RETURNING *',
             [name,description,managed_by,location]);
         return result.rows[0]
