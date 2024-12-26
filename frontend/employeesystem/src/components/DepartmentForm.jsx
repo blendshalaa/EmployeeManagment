@@ -1,6 +1,6 @@
 import React from 'react';
 
-function DepartmentForm({newDepartment,handleSubmit,handleInputChange}) {
+function DepartmentForm({newDepartment,handleSubmit,handleInputChange,editMode}) {
     return (
 
         <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
@@ -48,7 +48,7 @@ function DepartmentForm({newDepartment,handleSubmit,handleInputChange}) {
                 </div>
 
                 <button type='submit' className="bg-blue-500 rounded-md p-2 text-white hover:bg-blue-600">
-                    Create Department
+                    {editMode ? "Update Department" : "Create Department"}
                 </button>
 
             </form>

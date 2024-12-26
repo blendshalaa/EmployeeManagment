@@ -14,7 +14,10 @@ function Departments() {
       description:"",
       managed_by:"",
       location:""
-  })
+  });
+  const[editMode,setEditMode]=useState(false);
+  const[currentDepartment,setCurrentDepartment]=useState(null);
+
 
 
     useEffect(() => {
@@ -69,6 +72,54 @@ function Departments() {
     };
 
 
+    //handleeedit
+
+    const handleEditClick = (department) => {
+        setEditMode(true);
+        setCurrentDepartment(department);
+        setNewDepartment({
+            name: department.name,
+            description: department.description,
+            managed_by: department.managed_by,
+            location: department.location,
+        });
+    };
+
+    const handleEditSubmit=async(e)=>{
+        e.preventDefault();
+        try{
+            const response=await axios.put(`http://localhost:5000/api/departments/${currentDepartment.department_id}`,newDepartment);
+          setDepartments(departments.map(department=>(department.department_id===currentDepartment.department_id? response.data:department)));
+          setEditMode(false)
+            setNewDepartment({
+                name: "",
+                description: "",
+                managed_by: "",
+                location: "",
+            });
+          window.alert("department edited")
+          setCurrentDepartment(null)
+        }catch (error){
+            console.error("error editing the department",error)
+
+        }
+    }
+
+
+
+//Delete
+    const handleDelete=async(department_id)=>{
+        try{
+            const acceptDelete=window.confirm("are you sure ?");
+            if(acceptDelete){
+                await axios.delete(`http://localhost:5000/api/departments/${department_id}`);
+               setDepartments(departments.filter(department=>department.department_id!==department_id))
+            }
+        }catch(error){
+            console.log("error deleting departments",error)
+        }
+    }
+
 
 
 
@@ -78,11 +129,17 @@ function Departments() {
             <div className="pt-24 pl-4 pr-4 md:pl-24 md:pr-24">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Departments</h2>
 
-                <DepartmentForm newDepartment={newDepartment} handleSubmit={handleSubmit} handleInputChange={handleInputChange}/>
+                <DepartmentForm
+                    newDepartment={newDepartment}
+                    handleSubmit={editMode ? handleEditSubmit : handleSubmit}
+                    handleInputChange={handleInputChange}
+                    editMode={editMode}
+                />
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {departments.map((department) => (
-                        <DepartmentCard key={department.id} department={department}/>
+                        <DepartmentCard key={department.id} department={department} handleDelete={handleDelete} handleEditClick={handleEditClick}/>
                     ))}
                 </div>
             </div>
