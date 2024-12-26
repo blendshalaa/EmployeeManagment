@@ -1,7 +1,7 @@
 // components/EmployeeCard.js
 import React from 'react';
 
-function EmployeeCard({ employee }) {
+function EmployeeCard({ employee ,handleDelete,handleEditClick}) {
     return (
         <div
             className="max-w-xs bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
@@ -20,8 +20,8 @@ function EmployeeCard({ employee }) {
                     <div><strong>Hire Date:</strong> {new Date(employee.hire_date).toLocaleDateString()}</div>
                 </div>
                 <div className="pt-4 flex justify-around">
-                    <button className="rounded-lg bg-gray-300 px-4 py-2">Edit</button>
-                    <button className="rounded-lg bg-red-500 px-4 py-2 text-white">Delete</button>
+                    <button onClick={()=>handleEditClick(employee)} className="rounded-lg bg-gray-300 px-4 py-2">Edit</button>
+                    <button onClick={()=>handleDelete(employee.employee_id)} className="rounded-lg bg-red-500 px-4 py-2 text-white">Delete</button>
                 </div>
             </div>
         </div>
