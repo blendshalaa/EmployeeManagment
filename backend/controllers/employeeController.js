@@ -62,9 +62,12 @@ const deleteEmployees=async(req,res)=>{
     try{
         const deletedEmployee=await Employee.deleteEmp(employee_id);
         if(!deletedEmployee){
-            res.status(404).json({message:"Employee does not exist"})
+          return res.status(404).json({message:"Employee does not exist"})
         }
-        res.status(200).json(deletedEmployee)
+        res.status(200).json({
+            message:"Employee deleted successfully",
+            deletedEmployee
+        })
     }catch(error){
         console.error("error deleting employee",error);
         res.status(500).json({message:"error deleting employee"})
