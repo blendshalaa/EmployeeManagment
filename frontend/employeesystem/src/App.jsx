@@ -6,7 +6,7 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import NotFound from "./components/NotFound.jsx";
 import Departments from "./pages/Departments.jsx";
 import Employees from "./pages/Employees.jsx";
-import LeaveRequests from "./pages/LeaveRequests.jsx";
+
 import LogInPage from "./pages/LogInPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 
@@ -34,11 +34,7 @@ function App() {
             element:<Employees/>,
             errorElement:<NotFound/>
         },
-        {
-            path:"/leaveRequests",
-            element:<LeaveRequests/>,
-            errorElement:<NotFound/>
-        }
+
 
     ])
 

@@ -37,11 +37,6 @@ const Sidebar = () => {
                             Employees
                         </Link>
                     </li>
-                    <li>
-                        <Link to="/leaveRequests" className="text-lg hover:text-gray-300">
-                            Leave Requests
-                        </Link>
-                    </li>
                 </ul>
             </aside>
 
