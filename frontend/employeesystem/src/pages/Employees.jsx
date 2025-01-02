@@ -36,6 +36,8 @@ function Employees() {
 
 
 
+
+
     //create employee
 
     const handleSubmit=async(e)=>{
@@ -100,7 +102,7 @@ function Employees() {
 
     const handleDelete=async(employee_id)=>{
         try{
-            const acceptDelete=window.prompt("are you sure you want to delete");
+            const acceptDelete=window.confirm("are you sure you want to delete");
             if(acceptDelete){
              await axios.delete(`http://localhost:5000/api/employees/${employee_id}`);
                 setEmployees(employees.filter(employee=>employee.employee_id!==employee_id))
@@ -128,7 +130,7 @@ function Employees() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {employees.map((employee) => (
-                        <EmployeeCard key={employee.employee_id} employee={employee} handleDelete={handleDelete} handleEditClick={handleEditClick} handleEditSubmit={handleEditSubmit}/>
+                        <EmployeeCard key={employee.employee_id} employee={employee} handleDelete={handleDelete} handleEditClick={handleEditClick}/>
                     ))}
                 </div>
             </div>
