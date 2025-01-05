@@ -8,7 +8,7 @@ const createBenefits=async(req,res)=>{
       res.status(200).json(newBenefit)
     }catch(error){
         console.error("error creating new Benefit",error);
-        res.status(500).json({message:"error creating benefit"},error)
+        res.status(500).json({message:"error creating benefit",error})
     }
 };
 
@@ -28,8 +28,8 @@ const getBenefitsById=async(req,res)=>{
         const benefitID=await Benefits.getBenefitById(benefit_id)
         if(!benefit_id){
             res.status(404).json({message:"error benefit not found"});
-            res.status(200).json(benefitID)
         }
+        res.status(200).json(benefitID)
     }catch(error){
         console.error("could not find benefit by id",error);
         res.status(500).json("Error cant find benefit by id",error);
