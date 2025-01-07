@@ -9,6 +9,7 @@ import Employees from "./pages/Employees.jsx";
 
 import LogInPage from "./pages/LogInPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import BenefitsPage from "./pages/BenefitsPage.jsx";
 
 function App() {
 
@@ -34,6 +35,11 @@ function App() {
             element:<Employees/>,
             errorElement:<NotFound/>
         },
+        {
+            path:"/benefits",
+            element:<BenefitsPage/>,
+            errorElement:<NotFound/>
+        }
 
 
     ])

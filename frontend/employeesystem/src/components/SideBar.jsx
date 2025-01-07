@@ -37,17 +37,15 @@ const Sidebar = () => {
                             Employees
                         </Link>
                     </li>
+                    <li>
+                        <Link to="/benefits" className="text-lg hover:text-gray-300">
+                            Benefits
+                        </Link>
+                    </li>
                 </ul>
             </aside>
 
-            <main
-                className={`flex-1 bg-gray-100 p-6 transition-all duration-300 ${
-                    isOpen ? 'opacity-50 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''
-                }`}
-                onClick={() => isOpen && setIsOpen(false)}
-            >
-                <h1 className={`mt-8 ml-8 text-4xl ${isOpen ? 'hidden' : 'block'}`}>Welcome to the dashboard</h1>
-            </main>
+
         </div>
     );
 };
