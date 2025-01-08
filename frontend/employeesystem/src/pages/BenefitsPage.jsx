@@ -4,6 +4,13 @@ import Navbar from '../components/Navbar.jsx';
 
 function BenefitsPage() {
     const [benefits, setBenefits] = useState([]);
+    const[newBenefit,setNewBenefit]=useState({
+      employee_id:"",
+        benefit_type:"",
+        benefit_details:"",
+        start_date:"",
+        end_date:""
+    })
 
     useEffect(() => {
         const fetchBenefits = async () => {
@@ -16,6 +23,35 @@ function BenefitsPage() {
         };
         fetchBenefits();
     }, []);
+
+
+
+
+
+    const handleSubmit=async(e)=>{
+        e.preventDefault();
+        try{
+            const response=await axios.post(`http://localhost:5000/api/benefits`,newBenefit);
+            setBenefits([...benefits,response.data]);
+            setNewBenefit({
+                employee_id:"",
+                benefit_type:"",
+                benefit_details:"",
+                start_date:"",
+                end_date:""
+            })
+        }catch (error){
+            console.error("error creating new benefit",error)
+        }
+    };
+
+    const handleInputChange=(e)=>{
+        setNewBenefit({
+            ...newBenefit,
+            [e.target.name]:e.target.value
+        });
+    };
+
 
     return (
         <div className="min-h-screen bg-gray-100">
