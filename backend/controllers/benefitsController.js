@@ -36,35 +36,46 @@ const getBenefitsById=async(req,res)=>{
     }
 };
 
-const updateBenefits=async(req,res)=>{
-    const{benefit_id}=req.params;
-    const{employee_id,benefit_type,benefit_details,start_date,end_date}=req.body;
-    try{
-        const updatedBenefits=await Benefits.updateBenefit(benefit_id,{
-            employee_id,benefit_type,benefit_details,start_date,end_date
+const updateBenefits = async (req, res) => {
+    const { benefit_id } = req.params;
+    const { employee_id, benefit_type, benefit_details, start_date, end_date } = req.body;
+
+    try {
+        const rowsUpdated = await Benefits.updateBenefit(benefit_id, {
+            employee_id,
+            benefit_type,
+            benefit_details,
+            start_date,
+            end_date,
         });
-        if(!updatedBenefits){
-            res.status(404).json({message:"error benefit not found"})
+
+        if (rowsUpdated === 0) {
+            res.status(404).json({ message: "Benefit not found" });
+        } else {
+            res.status(200).json({ message: "Benefit updated successfully" });
         }
-        res.status(200).json(updatedBenefits)
-    }catch (error){
-        console.error("error updating benefits",error);
-        res.status(500).json("error cant update benefit",error)
+
+    } catch (error) {
+        console.error("Error updating benefits:", error);
+        res.status(500).json({ message: "Error updating benefit", error });
     }
 };
 
-const deleteBenefits=async(req,res)=>{
-    const{benefit_id}=req.params;
+const deleteBenefits = async (req, res) => {
+    const { benefit_id } = req.params;
 
-    try{
-        const deletedBenefit=await Benefits.deleteBenefit(benefit_id);
-        if(!deletedBenefit){
-            res.status(404).json({message:"error benefit not found"})
+    try {
+        const isDeleted = await Benefits.deleteBenefit(benefit_id);
+
+        if (!isDeleted) {
+            res.status(404).json({ message: "Benefit not found" });
+        } else {
+            res.status(200).json({ message: "Benefit deleted successfully" });
         }
-        res.status(200).json(deletedBenefit)
-    }catch (error){
-        console.error("error deleting benefits",error);
-        res.status(500).json("error cant delete benefit",error)
+
+    } catch (error) {
+        console.error("Error deleting benefits:", error);
+        res.status(500).json({ message: "Error deleting benefit", error });
     }
 };
 
