@@ -33,6 +33,7 @@ function BenefitsPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             setIsLoading(true);
             const response = await axios.post('http://localhost:5000/api/benefits', newBenefit);
