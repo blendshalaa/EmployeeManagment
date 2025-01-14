@@ -4,9 +4,11 @@ import axios from "axios";
 import {data} from "autoprefixer";
 import EmployeeCard from "../components/EmployeeCard.jsx";
 import EmployeeForm from "../components/EmployeeForm.jsx";
+import SearchFilter from "../components/SearchFilter.jsx";
 
 function Employees() {
     const[employees,setEmployees]=useState([]);
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
 
     const[newEmployee,setNewEmployee]=useState({
         name:"",
@@ -27,6 +29,7 @@ function Employees() {
                 const response=await axios.get('http://localhost:5000/api/employees');
                 console.log(response.data)
                 setEmployees(response.data);
+                setFilteredEmployees(response.data);
             }catch(error){
                 console.error("error fetching data",data)
             }
@@ -37,7 +40,9 @@ function Employees() {
 
 
 
-
+    const handleFilteredData = (filteredData) => {
+        setFilteredEmployees(filteredData);
+    };
 
     //create employee
 
@@ -123,6 +128,13 @@ function Employees() {
         <div>
             <Navbar/>
             <div className="pt-24 pl-4 pr-4 md:pl-24 md:pr-24">
+                <div>
+                    <SearchFilter
+                        data={employees}
+                        filterKey="employee_name" //
+                        onFilteredData={handleFilteredData}
+                    />
+                </div>
               <EmployeeForm newEmployee={newEmployee}
                             handleSubmit={editMode ? handleEditSubmit : handleSubmit}
                             handleInputChange={handleInputChange}
@@ -131,7 +143,7 @@ function Employees() {
                             />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {employees.map((employee) => (
+                    {filteredEmployees.map((employee) => (
                         <EmployeeCard key={employee.employee_id} employee={employee} handleDelete={handleDelete} handleEditClick={handleEditClick}/>
                     ))}
                 </div>
