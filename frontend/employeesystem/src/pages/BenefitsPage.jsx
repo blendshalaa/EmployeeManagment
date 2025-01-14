@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import {data} from "autoprefixer";
 
 function BenefitsPage() {
     const [benefits, setBenefits] = useState([]);
+    const [employees, setEmployees] = useState([]);
+
     const [newBenefit, setNewBenefit] = useState({
         employee_id: '',
         benefit_type: '',
@@ -30,6 +33,20 @@ function BenefitsPage() {
         };
         fetchBenefits();
     }, []);
+
+
+    useEffect(()=>{
+        const fetchEmployees=async()=>{
+            try{
+                const response=await axios.get('http://localhost:5000/api/employees');
+                console.log(response.data)
+                setEmployees(response.data);
+            }catch(error){
+                console.error("error fetching data",data)
+            }
+        };
+        fetchEmployees();
+    },[]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

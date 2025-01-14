@@ -7,6 +7,7 @@ import EmployeeForm from "../components/EmployeeForm.jsx";
 
 function Employees() {
     const[employees,setEmployees]=useState([]);
+
     const[newEmployee,setNewEmployee]=useState({
         name:"",
         email:"",
@@ -18,7 +19,7 @@ function Employees() {
     const[editMode,setEditMode]=useState(false);
     const[currentEmployee,setCurrentEmployee]=useState(null);
 
-//fetch from db
+
 
     useEffect(()=>{
         const fetchEmployees=async()=>{
@@ -126,6 +127,7 @@ function Employees() {
                             handleSubmit={editMode ? handleEditSubmit : handleSubmit}
                             handleInputChange={handleInputChange}
                             editMode={editMode}
+
                             />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

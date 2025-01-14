@@ -1,63 +1,96 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 
-function EmployeeForm({newEmployee,handleSubmit,handleInputChange,editMode}) {
+function EmployeeForm({ newEmployee, handleSubmit, handleInputChange, editMode }) {
+    const [departments, setDepartments] = useState([]);
+
+    useEffect(() => {
+        const fetchDepartments = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/departments');
+                console.log(response.data); // Inspect the response here
+                setDepartments(response.data);
+            } catch (error) {
+                console.error("Error fetching data", error);
+            }
+        };
+
+        fetchDepartments();
+    }, []);
 
     return (
-
         <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">Create an Employee</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-gray-700">Name</label>
-                    <input type="text"
-                           name="name"
-                           value={newEmployee.name}
-                           onChange={handleInputChange} required
-                           className="w-full border border-gray-300 rounded-md p-2"
-                           placeholder="Department Name"
+                    <input
+                        type="text"
+                        name="name"
+                        value={newEmployee.name}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        placeholder="Employee Name"
                     />
                 </div>
                 <div>
                     <label className="block text-gray-700">Email</label>
-                    <input type="text"
-                           name="email"
-                           value={newEmployee.email}
-                           onChange={handleInputChange} required
-                           className="w-full border border-gray-300 rounded-md p-2"
-                           placeholder="Enter employee email"
+                    <input
+                        type="text"
+                        name="email"
+                        value={newEmployee.email}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        placeholder="Enter employee email"
                     />
                 </div>
                 <div>
-                    <label className="block text-gray-700">Department ID</label>
-
+                    <label className="block text-gray-700">Department</label>
+                    <select
+                        name="department_id"
+                        value={newEmployee.department_id}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md p-2"
+                    >
+                        <option value="">Select Department</option>
+                        {departments.map((department) => (
+                            <option key={department.department_id} value={department.department_id}>
+                                {department.name} ({department.department_id})
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div>
-                    <label className="block text-gray-700">Location</label>
-                    <input type="date"
-                           name="hire_date"
-                           value={newEmployee.hire_date}
-                           onChange={handleInputChange} required
-                           className="w-full border border-gray-300 rounded-md p-2"
-                           placeholder="Hire Date"
+                    <label className="block text-gray-700">Hire Date</label>
+                    <input
+                        type="date"
+                        name="hire_date"
+                        value={newEmployee.hire_date}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md p-2"
                     />
                 </div>
                 <div>
                     <label className="block text-gray-700">Role</label>
-                    <input type="text"
-                           name="role"
-                           value={newEmployee.role}
-                           onChange={handleInputChange} required
-                           className="w-full border border-gray-300 rounded-md p-2"
-                           placeholder="Role"
+                    <input
+                        type="text"
+                        name="role"
+                        value={newEmployee.role}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full border border-gray-300 rounded-md p-2"
+                        placeholder="Role"
                     />
                 </div>
 
-                <button type='submit' className="bg-blue-500 rounded-md p-2 text-white hover:bg-blue-600">
+                <button type="submit" className="bg-blue-500 rounded-md p-2 text-white hover:bg-blue-600">
                     {editMode ? "Update Employee" : "Create Employee"}
                 </button>
-
             </form>
-
         </div>
     );
 }
