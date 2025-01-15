@@ -10,7 +10,7 @@ import SearchFilter from "../components/SearchFilter.jsx";
 function Departments() {
 
     const[departments,setDepartments]=useState([]);
-    const [filteredDepartments, setFilteredDepartments] = useState([]);
+
   const[newDepartment,setNewDepartment]=useState({
       name:"",
       description:"",
@@ -28,7 +28,7 @@ function Departments() {
                 const response=await axios.get('http://localhost:5000/api/departments');
                 console.log(response.data)
                 setDepartments(response.data);
-                setFilteredDepartments(response.data);
+
             }catch (error) {
                 console.error("error fetching data", error)
 
@@ -135,13 +135,7 @@ function Departments() {
         <div>
             <Navbar/>
             <div className="pt-24 pl-4 pr-4 md:pl-24 md:pr-24">
-                <div>
-                    <SearchFilter
-                        data={departments}
-                        filterKey="name"
-                        onFilteredData={handleFilteredData}
-                    />
-                </div>
+
 
 
                 <DepartmentForm
@@ -153,7 +147,7 @@ function Departments() {
 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredDepartments.map((department) => (
+                    {departments.map((department) => (
                         <DepartmentCard key={department.id} department={department} handleDelete={handleDelete} handleEditClick={handleEditClick}/>
                     ))}
                 </div>

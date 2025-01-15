@@ -7,7 +7,7 @@ import SearchFilter from "../components/SearchFilter.jsx";
 function BenefitsPage() {
     const [benefits, setBenefits] = useState([]);
     const [employees, setEmployees] = useState([]);
-    const [filteredBenefits, setFilteredBenefits] = useState([]);
+
     const [newBenefit, setNewBenefit] = useState({
         employee_id: '',
         benefit_type: '',
@@ -26,7 +26,7 @@ function BenefitsPage() {
                 const response = await axios.get('http://localhost:5000/api/benefits');
                 setBenefits(response.data);
                 setIsLoading(false);
-                setFilteredBenefits(response.data);
+
             } catch (err) {
                 console.error('Error fetching benefits:', err);
                 setError('Failed to load benefits.');
@@ -36,9 +36,7 @@ function BenefitsPage() {
         fetchBenefits();
     }, []);
 
-    const handleFilteredData = (filteredData) => {
-        setFilteredBenefits(filteredData);
-    };
+
 
 
     useEffect(()=>{
@@ -148,13 +146,7 @@ function BenefitsPage() {
         <div className="min-h-screen bg-gray-100">
             <Navbar />
             <div className="container mx-auto px-4 py-28">
-                <div>
-                    <SearchFilter
-                        data={benefits}
-                        filterKey="benefit_type" // Filter by benefit_type (you can adjust this key for other fields)
-                        onFilteredData={handleFilteredData}
-                    />
-                </div>
+
                 <h1 className="text-2xl font-bold text-gray-700 mb-4">Benefits List</h1>
 
                 {isLoading ? (
@@ -191,7 +183,7 @@ function BenefitsPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                             {benefits.length > 0 ? (
-                               filteredBenefits.map((benefit) => (
+                              benefits.map((benefit) => (
                                     <tr key={benefit.benefit_id}>
                                         <td className="px-4 py-2 text-sm text-gray-700">
                                             {benefit.benefit_id}
