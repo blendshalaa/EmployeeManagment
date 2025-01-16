@@ -8,6 +8,8 @@ import SearchFilter from "../components/SearchFilter.jsx";
 
 function Employees() {
     const[employees,setEmployees]=useState([]);
+const[filteredEmployees,setFilteredEmployees]=useState([]);
+const[searchQuery,setSearchQuery]=useState("")
 
 
     const[newEmployee,setNewEmployee]=useState({
@@ -39,7 +41,14 @@ function Employees() {
 
 
 
-
+    useEffect(() => {
+        const filtered = employees.filter((employee) =>
+            ["name", "role", ].some((field) =>
+                String(employee[field]).toLowerCase().includes(searchQuery.toLowerCase())
+            )
+        );
+        setFilteredEmployees(filtered);
+    }, [searchQuery, employees]);
 
 
     //create employee
@@ -123,9 +132,16 @@ function Employees() {
 
 
     return (
-        <div>
+        <div className="bg-gray-700 min-h-screen">
             <Navbar/>
             <div className="pt-24 pl-4 pr-4 md:pl-24 md:pr-24">
+              <div>
+                  <SearchFilter
+                      query={searchQuery}
+                      onSearchChange={setSearchQuery}
+                      placeholder="Search benefits..."
+                  />
+              </div>
 
               <EmployeeForm newEmployee={newEmployee}
                             handleSubmit={editMode ? handleEditSubmit : handleSubmit}

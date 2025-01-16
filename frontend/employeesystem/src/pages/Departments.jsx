@@ -10,6 +10,8 @@ import SearchFilter from "../components/SearchFilter.jsx";
 function Departments() {
 
     const[departments,setDepartments]=useState([]);
+    const[filteredDepartments,setFilteredDepartments]=useState([]);
+    const[searchQuery,setSearchQuery]=useState("")
 
   const[newDepartment,setNewDepartment]=useState({
       name:"",
@@ -39,9 +41,15 @@ function Departments() {
     }, []);
 
 
-    const handleFilteredData = (filteredData) => {
-        setFilteredDepartments(filteredData);
-    };
+    useEffect(() => {
+        const filtered = departments.filter((department) =>
+            ["name","location"].some((field) =>
+                String(department[field]).toLowerCase().includes(searchQuery.toLowerCase())
+            )
+        );
+       setFilteredDepartments(filtered);
+    }, [searchQuery, departments]);
+
 
 
     //create a department
@@ -53,7 +61,7 @@ function Departments() {
 
             const response = await axios.post("http://localhost:5000/api/departments", {
                 ...newDepartment,
-                managed_by: newDepartment.managed_by || null,  // If managed_by is empty, set it to null
+                managed_by: newDepartment.managed_by || null,
             });
             setDepartments([...departments, response.data]);
 
@@ -131,29 +139,36 @@ function Departments() {
 
 
 
+
     return (
-        <div>
-            <Navbar/>
+        <div className="bg-gray-700 min-h-screen">
+            <Navbar />
             <div className="pt-24 pl-4 pr-4 md:pl-24 md:pr-24">
-
-
-
+                <SearchFilter
+                    query={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    placeholder="Search departments..."
+                />
                 <DepartmentForm
                     newDepartment={newDepartment}
                     handleSubmit={editMode ? handleEditSubmit : handleSubmit}
                     handleInputChange={handleInputChange}
                     editMode={editMode}
                 />
-
-
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {departments.map((department) => (
-                        <DepartmentCard key={department.id} department={department} handleDelete={handleDelete} handleEditClick={handleEditClick}/>
+                    {filteredDepartments.map((department) => (
+                        <DepartmentCard
+                            key={department.id}
+                            department={department}
+                            handleDelete={handleDelete}
+                            handleEditClick={handleEditClick}
+                        />
                     ))}
                 </div>
             </div>
         </div>
     );
+
 }
 
 export default Departments;
