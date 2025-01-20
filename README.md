@@ -28,17 +28,3 @@ A web-based application to manage employees, departments, and employee benefits 
 - PostgreSQL  
 
 ---
-
-## Installation  
-
-### Prerequisites  
-Make sure you have the following installed:  
-- [Node.js](https://nodejs.org/)  
-- [PostgreSQL](https://www.postgresql.org/)  
-
-### Steps  
-
-1. **Clone the repository**:  
-   ```bash  
-   git clone https://github.com/yourusername/employee-management-system.git  
-   cd employee-management-system  
