@@ -1,88 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import {data} from "autoprefixer";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import SearchFilter from "../components/SearchFilter.jsx";
 
-function BenefitsPage() {
-    const [benefits, setBenefits] = useState([]);
-    const [filteredBenefits,setFilteredBenefits]=useState([]);
-    const[searchQuery,setSearchQuery]=useState("")
-    const [employees, setEmployees] = useState([]);
+const fetchBenefits = async () => {
+    const response = await axios.get("http://localhost:5000/api/benefits");
+    return response.data;
+};
 
+const fetchEmployees = async () => {
+    const response = await axios.get("http://localhost:5000/api/employees");
+    return response.data;
+};
+
+
+function BenefitsPage() {
+    const queryClient = useQueryClient();
+    const [searchQuery, setSearchQuery] = useState("");
     const [newBenefit, setNewBenefit] = useState({
-        employee_id: '',
-        benefit_type: '',
-        benefit_details: '',
-        start_date: '',
-        end_date: '',
+        employee_id: "",
+        benefit_type: "",
+        benefit_details: "",
+        start_date: "",
+        end_date: "",
     });
     const [editMode, setEditMode] = useState(false);
     const [currentBenefit, setCurrentBenefit] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchBenefits = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/benefits');
-                setBenefits(response.data);
-                setIsLoading(false);
+    const { data: benefits, isLoading, isError, error } = useQuery(
+        "benefits",
+        fetchBenefits
+    );
 
-            } catch (err) {
-                console.error('Error fetching benefits:', err);
-                setError('Failed to load benefits.');
-                setIsLoading(false);
-            }
-        };
-        fetchBenefits();
-    }, []);
+    const { data: employees } = useQuery("employees", fetchEmployees);
 
 
 
 
-    useEffect(()=>{
-        const fetchEmployees=async()=>{
-            try{
-                const response=await axios.get('http://localhost:5000/api/employees');
-                console.log(response.data)
-                setEmployees(response.data);
-            }catch(error){
-                console.error("error fetching data",data)
-            }
-        };
-        fetchEmployees();
-    },[]);
-
-    useEffect(() => {
-        const filtered = benefits.filter((benefit) =>
-            ["benefit_type", "benefit_details", "employee_id", "benefit_id"].some((field) =>
-                String(benefit[field]).toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        );
-        setFilteredBenefits(filtered);
-    }, [searchQuery, benefits]);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            setIsLoading(true);
-            const response = await axios.post('http://localhost:5000/api/benefits', newBenefit);
-            setBenefits([...benefits, response.data]);
-            setNewBenefit({
-                employee_id: '',
-                benefit_type: '',
-                benefit_details: '',
-                start_date: '',
-                end_date: '',
-            });
-            setIsLoading(false);
-        } catch (err) {
-            console.error('Error creating new benefit:', err);
-            setError('Failed to create new benefit.');
-            setIsLoading(false);
+    // Add New Benefit
+    const addBenefitMutation = useMutation(
+        (newBenefit) => axios.post("http://localhost:5000/api/benefits", newBenefit),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("benefits");
+            },
         }
+    );
+
+
+    const editBenefitMutation = useMutation(
+        ({ benefitId, updatedBenefit }) =>
+            axios.put(
+                `http://localhost:5000/api/benefits/${benefitId}`,
+                updatedBenefit
+            ),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("benefits");
+                setEditMode(false);
+                setCurrentBenefit(null);
+            },
+        }
+    );
+
+    // Delete Benefit
+    const deleteBenefitMutation = useMutation(
+        (benefitId) =>
+            axios.delete(`http://localhost:5000/api/benefits/${benefitId}`),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("benefits");
+            },
+        }
+    );
+
+    const handleInputChange = (e) => {
+        setNewBenefit({ ...newBenefit, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (editMode) {
+            editBenefitMutation.mutate({
+                benefitId: currentBenefit.benefit_id,
+                updatedBenefit: newBenefit,
+            });
+        } else {
+            addBenefitMutation.mutate(newBenefit);
+        }
+
+        setNewBenefit({
+            employee_id: "",
+            benefit_type: "",
+            benefit_details: "",
+            start_date: "",
+            end_date: "",
+        });
     };
 
     const handleEditClick = (benefit) => {
@@ -91,66 +106,25 @@ function BenefitsPage() {
         setNewBenefit({ ...benefit });
     };
 
-    const handleEditSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            setIsLoading(true);
-            const response = await axios.put(
-                `http://localhost:5000/api/benefits/${currentBenefit.benefit_id}`,
-                newBenefit
-            );
-
-            // Update the benefits state directly
-            setBenefits(
-                benefits.map((b) =>
-                    b.benefit_id === currentBenefit.benefit_id ? response.data : b
-                )
-            );
-
-            setEditMode(false);
-            setCurrentBenefit(null);
-            setIsLoading(false);
-        } catch (err) {
-            console.error("Error editing benefit:", err);
-            setError("Failed to edit benefit.");
-            setIsLoading(false);
-        } finally {
-
-            setNewBenefit({
-                employee_id: "",
-                benefit_type: "",
-                benefit_details: "",
-                start_date: "",
-                end_date: "",
-            });
-        }
+    const handleDelete = (benefitId) => {
+        deleteBenefitMutation.mutate(benefitId);
     };
 
-    const handleDelete = async (benefit_id) => {
-        try {
-            setIsLoading(true);
-            await axios.delete(`http://localhost:5000/api/benefits/${benefit_id}`);
-            setBenefits(benefits.filter((benefit) => benefit.benefit_id !== benefit_id));
-            setIsLoading(false);
-        } catch (err) {
-            console.error('Error deleting benefit:', err);
-            setError('Failed to delete benefit.');
-            setIsLoading(false);
-        }
-    };
 
-    const handleInputChange = (e) => {
-        setNewBenefit({
-            ...newBenefit,
-            [e.target.name]: e.target.value,
-        });
-    };
+    const filteredBenefits = benefits?.filter((benefit) =>
+        ["benefit_type", "benefit_details", "employee_id", "benefit_id"].some(
+            (field) =>
+                String(benefit[field]).toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error: {error.message}</div>;
 
     return (
         <div className="min-h-screen bg-gray-800 text-white">
             <Navbar />
             <div className="container mx-auto px-4 py-28">
-
                 <h1 className="text-2xl font-bold text-white mb-6">Benefits List</h1>
                 <SearchFilter
                     query={searchQuery}
@@ -159,93 +133,87 @@ function BenefitsPage() {
                     className="bg-gray-700 text-white rounded-md px-4 py-2 mb-4"
                 />
 
-                {isLoading ? (
-                    <div className="text-center text-gray-300">Loading...</div>
-                ) : error ? (
-                    <div className="text-red-400 text-center">{error}</div>
-                ) : (
-                    <div className="bg-gray-700 shadow rounded-lg overflow-hidden">
-                        <table className="min-w-full table-auto">
-                            <thead className="bg-gray-900">
-                            <tr>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    Benefit ID
-                                </th>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    Employee ID
-                                </th>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    Benefit Type
-                                </th>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    Details
-                                </th>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    Start Date
-                                </th>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    End Date
-                                </th>
-                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
-                                    Actions
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-600">
-                            {filteredBenefits.length > 0 ? (
-                                filteredBenefits.map((benefit) => (
-                                    <tr key={benefit.benefit_id} className="hover:bg-gray-600">
-                                        <td className="px-4 py-2 text-sm">{benefit.benefit_id}</td>
-                                        <td className="px-4 py-2 text-sm">{benefit.employee_id}</td>
-                                        <td className="px-4 py-2 text-sm">{benefit.benefit_type}</td>
-                                        <td className="px-4 py-2 text-sm">{benefit.benefit_details}</td>
-                                        <td className="px-4 py-2 text-sm">
-                                            {benefit.start_date
-                                                ? new Date(benefit.start_date).toLocaleDateString('en-CA')
-                                                : 'N/A'}
-                                        </td>
-                                        <td className="px-4 py-2 text-sm">
-                                            {benefit.end_date
-                                                ? new Date(benefit.end_date).toLocaleDateString('en-CA')
-                                                : 'N/A'}
-                                        </td>
-                                        <td className="px-4 py-2 text-sm">
-                                            <button
-                                                className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 mr-2"
-                                                onClick={() => handleEditClick(benefit)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600"
-                                                onClick={() => handleDelete(benefit.benefit_id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan="7"
-                                        className="px-4 py-2 text-center text-sm text-gray-300"
-                                    >
-                                        No benefits available.
+                <div className="bg-gray-700 shadow rounded-lg overflow-hidden">
+                    <table className="min-w-full table-auto">
+                        <thead className="bg-gray-900">
+                        <tr>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                Benefit ID
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                Employee ID
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                Benefit Type
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                Details
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                Start Date
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                End Date
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-gray-300">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-600">
+                        {filteredBenefits.length > 0 ? (
+                            filteredBenefits.map((benefit) => (
+                                <tr key={benefit.benefit_id} className="hover:bg-gray-600">
+                                    <td className="px-4 py-2 text-sm">{benefit.benefit_id}</td>
+                                    <td className="px-4 py-2 text-sm">{benefit.employee_id}</td>
+                                    <td className="px-4 py-2 text-sm">{benefit.benefit_type}</td>
+                                    <td className="px-4 py-2 text-sm">{benefit.benefit_details}</td>
+                                    <td className="px-4 py-2 text-sm">
+                                        {benefit.start_date
+                                            ? new Date(benefit.start_date).toLocaleDateString("en-CA")
+                                            : "N/A"}
+                                    </td>
+                                    <td className="px-4 py-2 text-sm">
+                                        {benefit.end_date
+                                            ? new Date(benefit.end_date).toLocaleDateString("en-CA")
+                                            : "N/A"}
+                                    </td>
+                                    <td className="px-4 py-2 text-sm">
+                                        <button
+                                            className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 mr-2"
+                                            onClick={() => handleEditClick(benefit)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600"
+                                            onClick={() => handleDelete(benefit.benefit_id)}
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
-                            )}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan="7"
+                                    className="px-4 py-2 text-center text-sm text-gray-300"
+                                >
+                                    No benefits available.
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
+                </div>
 
                 <div className="mt-10">
                     <h2 className="text-xl font-bold mb-4">
-                        {editMode ? 'Edit Benefit' : 'Add New Benefit'}
+                        {editMode ? "Edit Benefit" : "Add New Benefit"}
                     </h2>
                     <form
-                        onSubmit={editMode ? handleEditSubmit : handleSubmit}
+                        onSubmit={handleSubmit}
                         className="bg-gray-700 p-6 rounded-lg shadow-md"
                     >
                         <div className="grid grid-cols-2 gap-4 mb-4">
@@ -292,7 +260,7 @@ function BenefitsPage() {
                             type="submit"
                             className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600"
                         >
-                            {editMode ? 'Save Changes' : 'Add Benefit'}
+                            {editMode ? "Save Changes" : "Add Benefit"}
                         </button>
                     </form>
                 </div>

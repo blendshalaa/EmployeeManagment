@@ -10,6 +10,9 @@ import Employees from "./pages/Employees.jsx";
 import LogInPage from "./pages/LogInPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import BenefitsPage from "./pages/BenefitsPage.jsx";
+import {QueryClient, QueryClientProvider} from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
 
@@ -48,7 +51,11 @@ function App() {
   return (
     <>
 <div>
-    <RouterProvider router={router}/>
+    <QueryClientProvider client={queryClient}>
+        <div>
+            <RouterProvider router={router} />
+        </div>
+    </QueryClientProvider>
 </div>
      </>
   )
