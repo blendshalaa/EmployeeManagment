@@ -39,7 +39,7 @@ function BenefitsPage() {
 
 
 
-    // Add New Benefit
+
     const addBenefitMutation = useMutation(
         (newBenefit) => axios.post("http://localhost:5000/api/benefits", newBenefit),
         {
