@@ -7,6 +7,7 @@ const protectedRoutes=require('./Auth/protectedRoutes');
 const departmentRoutes=require('./routes/departmentRoutes');
 const employeeRoutes=require('./routes/employeeRoutes')
 const benefitRoutes=require('./routes/benefitsRoutes');
+const performanceReviewRoutes=require('./routes/performanceReviewRoutes')
 
 
 
@@ -37,7 +38,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 app.use('/api/departments',departmentRoutes);
 app.use('/api/employees',employeeRoutes);
-app.use('/api/benefits',benefitRoutes)
+app.use('/api/benefits',benefitRoutes);
+app.use('/api/performanceReview',performanceReviewRoutes)
 
 
 
