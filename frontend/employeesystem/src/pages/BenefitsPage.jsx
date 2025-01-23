@@ -217,14 +217,21 @@ function BenefitsPage() {
                         className="bg-gray-700 p-6 rounded-lg shadow-md"
                     >
                         <div className="grid grid-cols-2 gap-4 mb-4">
-                            <input
-                                type="text"
-                                name="employee_id"
-                                value={newBenefit.employee_id}
-                                onChange={handleInputChange}
-                                placeholder="Employee ID"
-                                className="bg-gray-800 text-white rounded-md px-4 py-2 border border-gray-600"
-                            />
+                         <select
+                             name="employee_id"
+                             value={newBenefit.employee_id}
+                             onChange={handleInputChange}
+                             required
+                             className="bg-gray-800 text-white rounded-md px-4 py-2 border border-gray-600"
+                             >
+                             <option value>Select Employee</option>
+                             {employees.map((employee)=>(
+                                 <option key={employee.employee_id} value={employee.employee_id}>
+                                     {employee.name}
+                                 </option>
+                             ))}
+
+                         </select>
                             <input
                                 type="text"
                                 name="benefit_type"
