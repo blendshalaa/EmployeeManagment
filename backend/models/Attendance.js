@@ -12,7 +12,7 @@ const Attendance={
         return result.rows
     },
     getAttendanceById:async(attendance_id)=>{
-        const result=await pool.query('SELECT FROM attendance where attendance_id=$1',
+        const result=await pool.query('SELECT * FROM attendance where attendance_id=$1',
             [attendance_id]);
         return result.rows[0]
     },
