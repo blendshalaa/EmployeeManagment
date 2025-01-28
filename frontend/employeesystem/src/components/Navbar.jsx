@@ -24,6 +24,9 @@ function Navbar() {
                     <Link to="/benefits" className="text-white hover:text-gray-300">
                         Benefits
                     </Link>
+                    <Link to="/attendance" className="text-white hover:text-gray-300">
+                        Attendance
+                    </Link>
                 </div>
 
                 {/* Mobile Hamburger Menu */}

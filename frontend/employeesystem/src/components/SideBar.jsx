@@ -60,6 +60,14 @@ const Sidebar = () => {
                             🎁 Benefits
                         </Link>
                     </li>
+                    <li>
+                        <Link
+                            to="/attendance"
+                            className="flex items-center text-lg font-medium hover:text-blue-400 hover:bg-gray-700 px-4 py-2 rounded-lg transition duration-200"
+                        >
+                           Attendance
+                        </Link>
+                    </li>
                 </ul>
 
 

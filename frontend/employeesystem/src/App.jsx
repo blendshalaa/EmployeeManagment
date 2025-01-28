@@ -11,6 +11,7 @@ import LogInPage from "./pages/LogInPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import BenefitsPage from "./pages/BenefitsPage.jsx";
 import {QueryClient, QueryClientProvider} from "react-query";
+import AttendancePage from "./pages/AttendancePage.jsx";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,10 @@ function App() {
         {
             path:"/benefits",
             element:<BenefitsPage/>,
+            errorElement:<NotFound/>
+        },{
+        path:'/attendance',
+            element:<AttendancePage/>,
             errorElement:<NotFound/>
         }
 
