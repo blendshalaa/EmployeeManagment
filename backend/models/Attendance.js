@@ -16,10 +16,12 @@ const Attendance={
             [attendance_id]);
         return result.rows[0]
     },
-    updateAttendance:async(attendance_id,{employee_id,date,status,hours_worked,leave_reason})=>{
-        const result=await pool.query('UPDATE attendance SET employee_id=$1,date=$2,status=$3,hours_worked=$4,leave_reason=$5,attendance_id=$6 RETURNING *',
-            [employee_id,date,status,hours_worked,leave_reason]);
-        return result.rows[0]
+    updateAttendance : async (attendance_id, { employee_id, date, status, hours_worked, leave_reason }) => {
+        const result = await pool.query(
+            'UPDATE attendance SET employee_id = $1, date = $2, status = $3, hours_worked = $4, leave_reason = $5 WHERE attendance_id = $6 RETURNING *',
+            [employee_id, date, status, hours_worked, leave_reason, attendance_id]
+        );
+        return result.rows[0];
     },
     deleteAttendance:async(attendance_id)=>{
         const result=await pool.query('DELETE FROM attendance where attendance_id=$1 RETURNING *',
