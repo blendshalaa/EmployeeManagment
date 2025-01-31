@@ -62,10 +62,10 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <Link
-                            to="/attendance"
+                            to="/performanceReview"
                             className="flex items-center text-lg font-medium hover:text-blue-400 hover:bg-gray-700 px-4 py-2 rounded-lg transition duration-200"
                         >
-                           Attendance
+                          PerformanceReview
                         </Link>
                     </li>
                 </ul>

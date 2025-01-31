@@ -3,11 +3,16 @@ import Navbar from "../components/Navbar.jsx";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from 'axios';
 
+
 // Fetch attendance data from the API
 const fetchAttendance = async () => {
     const response = await axios.get('http://localhost:5000/api/attendance');
     return response.data;
 };
+const fetchEmployees=async()=>{
+    const response=await axios.get('http://localhost:5000/api/employees');
+    return response.data
+}
 
 const AttendancePage = () => {
     const queryClient = useQueryClient();
@@ -23,7 +28,9 @@ const AttendancePage = () => {
 
     // Fetch attendance data using react-query
     const { data: attendance, isLoading, isError, error } = useQuery("attendance", fetchAttendance);
+const{data:employees,isLoadingEmp,isErrorEmp,errorEmp}=useQuery("employees",fetchEmployees
 
+)
     // Mutation to add a new attendance record
     const addRecordMutation = useMutation(
         (newRecord) => axios.post('http://localhost:5000/api/attendance', newRecord),
@@ -175,15 +182,18 @@ const AttendancePage = () => {
                         className="bg-gray-700 p-6 rounded-lg shadow-md"
                     >
                         <div className="grid grid-cols-2 gap-4 mb-4">
-                            <input
-                                type="text"
-                                name="employee_id"
+                        <select name="employee_id"
                                 value={newRecord.employee_id}
                                 onChange={handleInputChange}
-                                placeholder="Employee ID"
                                 className="bg-gray-800 text-white rounded-md px-4 py-2 border border-gray-600"
-                                required
-                            />
+                                >
+                            <option value="">Select Employee ID</option>
+                            {employees?.map((employee) => (
+                                <option key={employee.employee_id} value={employee.employee_id}>
+                                    {employee.employee_id} - {employee.name}
+                                </option>
+                            ))}
+                        </select>
                             <input
                                 type="date"
                                 name="date"

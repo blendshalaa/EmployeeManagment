@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import BenefitsPage from "./pages/BenefitsPage.jsx";
 import {QueryClient, QueryClientProvider} from "react-query";
 import AttendancePage from "./pages/AttendancePage.jsx";
+import PerformanceReviewPage from "./pages/PerformanceReviewPage.jsx";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,11 @@ function App() {
         },{
         path:'/attendance',
             element:<AttendancePage/>,
+            errorElement:<NotFound/>
+        },
+        {
+            path:'/performanceReview',
+            element:<PerformanceReviewPage/>,
             errorElement:<NotFound/>
         }
 
