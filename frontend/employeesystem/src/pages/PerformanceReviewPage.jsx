@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios from "axios";
 import {useQuery,useMutation,useQueryClient} from "react-query";
 import Navbar from "../components/Navbar.jsx";
+import SearchFilter from "../components/SearchFilter.jsx";
 
 
 const fetchPerformanceReview=async()=>{
@@ -26,6 +27,7 @@ function PerformanceReviewPage() {
         comments: "",
         goals: ""
     });
+    const[searchQuery,setSearchQuery]=useState("")
     const [editMode, setEditMode] = useState(false);
     const [currentReview, setCurrentReview] = useState(null);
 
@@ -107,11 +109,24 @@ const {
         deleteReviewMutation.mutate(performance_id)
     }
 
+    const filteredReviews = performanceReview?.filter((reviews) =>
+        ["rating"].some(
+            (field) =>
+                String(reviews[field]).toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
     return (
         <div className="min-h-screen bg-gray-800 text-white">
             <Navbar/>
             <div className="container mx-auto px-4 py-28">
                 <h1 className="text-2xl font-bold text-white mb-6">Performance Reviews</h1>
+                <SearchFilter
+                    query={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    placeholder="Search Reviews"
+                    className="bg-gray-700 text-white rounded-md px-4 py-2 mb-4"
+                />
 
                 {/* Performance Review Table */}
                 <div className="bg-gray-700 shadow rounded-lg overflow-hidden">
@@ -145,7 +160,7 @@ const {
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-600">
-                        {performanceReview?.map((review) => (
+                        {filteredReviews?.map((review) => (
                             <tr key={review.performance_id} className="hover:bg-gray-600">
                                 <td className="px-4 py-2 text-sm">{review.employee_id}</td>
                                 <td className="px-4 py-2 text-sm">{review.review_date}</td>

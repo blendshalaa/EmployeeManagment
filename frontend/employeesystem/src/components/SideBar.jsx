@@ -65,7 +65,7 @@ const Sidebar = () => {
                             to="/performanceReview"
                             className="flex items-center text-lg font-medium hover:text-blue-400 hover:bg-gray-700 px-4 py-2 rounded-lg transition duration-200"
                         >
-                          PerformanceReview
+                            👥 Performance
                         </Link>
                     </li>
                 </ul>

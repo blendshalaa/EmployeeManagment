@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar.jsx";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import axios from 'axios';
+import SearchFilter from "../components/SearchFilter.jsx";
 
 
 // Fetch attendance data from the API
@@ -23,6 +24,7 @@ const AttendancePage = () => {
         hours_worked: "",
         leave_reason: ""
     });
+    const[searchQuery,setSearchQuery]=useState("")
     const [editMode, setEditMode] = useState(false);
     const [currentAttendance, setCurrentAttendance] = useState(null);
 
@@ -103,12 +105,26 @@ const{data:employees,isLoadingEmp,isErrorEmp,errorEmp}=useQuery("employees",fetc
         deleteAttendanceMutation.mutate(attendance_id);
     };
 
+
+    const filteredRecords = attendance?.filter((attendance) =>
+        ["status","hours_worked"].some(
+            (field) =>
+                String(attendance[field]).toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
     // Render the component
     return (
         <div className="min-h-screen bg-gray-800 text-white">
             <Navbar />
             <div className="container mx-auto px-4 py-28">
                 <h1 className="text-2xl font-bold text-white mb-6">Attendance List</h1>
+                <SearchFilter
+                    query={searchQuery}
+                    onSearchChange={setSearchQuery}
+                    placeholder="Search attendance..."
+                    className="bg-gray-700 text-white rounded-md px-4 py-2 mb-4"
+                />
 
                 <div className="bg-gray-700 shadow rounded-lg overflow-hidden">
                     <table className="min-w-full table-auto">
@@ -135,8 +151,8 @@ const{data:employees,isLoadingEmp,isErrorEmp,errorEmp}=useQuery("employees",fetc
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-600">
-                        {attendance?.length > 0 ? (
-                            attendance.map((record) => (
+                        {filteredRecords?.length > 0 ? (
+                            filteredRecords.map((record) => (
                                 <tr key={record.attendance_id} className="hover:bg-gray-600">
                                     <td className="px-4 py-2 text-sm">{record.employee_id}</td>
                                     <td className="px-4 py-2 text-sm">{record.date}</td>
