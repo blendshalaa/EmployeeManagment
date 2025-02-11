@@ -71,10 +71,10 @@ function Dashboard() {
 
             <div className="flex-1 p-6 bg-gray-900 text-white"> {/* Matches sidebar theme */}
 
-                {/* Header */}
+
                 <h1 className="text-3xl font-bold mb-8 text-gray-100">Dashboard</h1>
 
-                {/* Statistics Section */}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-gray-800 shadow-md rounded-lg p-6 text-center border border-gray-700 hover:shadow-lg transition">
                         <h2 className="text-lg font-semibold uppercase text-gray-400">
@@ -120,13 +120,13 @@ function Dashboard() {
                                         legend: {
                                             position: "top",
                                             labels: {
-                                                color: "white", // Matches theme
+                                                color: "white",
                                             },
                                         },
                                         title: {
                                             display: true,
                                             text: "Employee Count per Department",
-                                            color: "white", // Matches theme
+                                            color: "white",
                                         },
                                     },
                                     scales: {

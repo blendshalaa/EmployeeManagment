@@ -7,9 +7,9 @@ const EmployeeChart = () => {
     useEffect(() => {
         const ctx = chartRef.current.getContext("2d");
 
-        // Chart data and configuration
+
         const employeeData = new Chart(ctx, {
-            type: "bar", // Chart type
+            type: "bar",
             data: {
                 labels: ["Engineering", "HR", "Marketing", "Sales", "IT"], // Departments
                 datasets: [
@@ -40,13 +40,13 @@ const EmployeeChart = () => {
                 },
                 scales: {
                     y: {
-                        beginAtZero: true, // Start Y-axis from 0
+                        beginAtZero: true,
                     },
                 },
             },
         });
 
-        // Cleanup on component unmount
+
         return () => {
             employeeData.destroy();
         };
