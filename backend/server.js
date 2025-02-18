@@ -35,8 +35,9 @@ app.get('/test-connection', async (req, res) => {
 
 
 
+// Routes
 app.use('/api/auth', authRoutes);
-app.use('/api', protectedRoutes);
+app.use('/api/dashboard', protectedRoutes);
 app.use('/api/departments',departmentRoutes);
 app.use('/api/employees',employeeRoutes);
 app.use('/api/benefits',benefitRoutes);

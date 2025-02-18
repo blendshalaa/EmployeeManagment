@@ -1,15 +1,29 @@
-// Middleware to check user role
-const roleMiddleware = (allowedRoles) => {
+// middleware/roleMiddleware.js
+const jwt = require('jsonwebtoken');
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return res.status(401).json({ message: 'Access denied' });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.status(403).json({ message: 'Invalid token' });
+        req.user = user;
+        next();
+    });
+}
+
+function authorizeRole(...allowedRoles) {
     return (req, res, next) => {
-        const userRole = req.user.role; // The role from the decoded token
+        if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
 
-        // Check if the user's role is in the allowedRoles array
-        if (allowedRoles.includes(userRole)) {
-            return next();  // Proceed to the next middleware or route handler
-        } else {
-            return res.status(403).json({ message: 'Access denied' });  // Forbidden if role doesn't match
+        if (!allowedRoles.includes(req.user.role)) {
+            return res.status(403).json({ message: 'Forbidden' });
         }
-    };
-};
 
-module.exports = roleMiddleware;
+        next();
+    };
+}
+
+module.exports = { authenticateToken, authorizeRole };
