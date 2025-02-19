@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useContext, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {AuthContext} from "../authContext.jsx";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { user, logout } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout(); // Clear the token and reset user state
+        navigate('/login'); // Redirect to the login page
+    };
 
     return (
         <div className="flex h-screen">
@@ -68,11 +76,24 @@ const Sidebar = () => {
                             👥 Performance
                         </Link>
                     </li>
+
+
+
                 </ul>
 
 
-                <div className="absolute bottom-4 w-full text-center text-sm text-gray-400">
-                    © 2025 Dashboard
+                <div className="absolute bottom-4">
+                    {user && (
+                        <li>
+                            <button
+                                onClick={handleLogout}
+                                className="bg-red-500 hover:bg-red-600 px-4 py-1 mt-4 rounded"
+                            >
+                                Sign Out
+                            </button>
+                        </li>
+                    )}
+
                 </div>
             </aside>
         </div>

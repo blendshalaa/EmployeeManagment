@@ -27,7 +27,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
 
-                    {/* Protected Routes */}
+
                     <Route element={<ProtectedRoute allowedRoles={['HR', 'Admin']} />}>
                         <Route path="/" element={<Dashboard />} />
                         <Route path="/departments" element={<Departments />} />
@@ -37,10 +37,10 @@ function App() {
                         <Route path="/performanceReview" element={<PerformanceReviewPage />} />
                     </Route>
 
-                    {/* Unauthorized Access */}
 
 
-                    {/* Fallback Route */}
+
+
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>

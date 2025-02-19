@@ -22,13 +22,11 @@ export const AuthProvider = ({ children }) => {
         console.log('User logged in with token:', token);
     };
 
-    // Logout function
     const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
+        localStorage.removeItem('token'); // Remove token from localStorage
+        setUser(null); // Reset user state
         console.log('User logged out');
     };
-
     return (
         <AuthContext.Provider value={{ user, login, logout }}>
             {children}
