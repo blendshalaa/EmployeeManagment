@@ -65,7 +65,7 @@ function BenefitsPage() {
         }
     );
 
-    // Delete Benefit
+
     const deleteBenefitMutation = useMutation(
         (benefitId) =>
             axios.delete(`http://localhost:5000/api/benefits/${benefitId}`),

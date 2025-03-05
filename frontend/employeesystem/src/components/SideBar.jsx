@@ -8,12 +8,12 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout(); // Clear the token and reset user state
-        navigate('/login'); // Redirect to the login page
+        logout();
+        navigate('/login');
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen relative">
 
 
             <button
@@ -29,12 +29,12 @@ const Sidebar = () => {
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 } fixed md:relative md:translate-x-0 w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6 h-full transition-transform duration-300 z-40 shadow-lg`}
             >
-                {/* Sidebar Header */}
+
                 <h2 className="text-2xl font-bold mb-8 border-b border-gray-700 pb-4 text-center">
                    Dashboard
                 </h2>
 
-                {/* Sidebar Navigation */}
+
                 <ul className="space-y-6">
                     <li>
                         <Link

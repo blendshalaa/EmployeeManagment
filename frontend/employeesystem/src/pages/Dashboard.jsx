@@ -1,3 +1,4 @@
+// pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import "../styles/tailwind.css";
 import Sidebar from "../components/SideBar.jsx";
@@ -12,8 +13,10 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
+import AdminFeatures from "../components/AdminFeatures"; // Import AdminFeatures
+import { useContext } from "react";
+import { AuthContext } from "../authContext.jsx";
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function Dashboard() {
@@ -23,6 +26,7 @@ function Dashboard() {
     const [departments, setDepartments] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [chartData, setChartData] = useState(null);
+    const { user } = useContext(AuthContext); // Get user from AuthContext
 
     useEffect(() => {
         const fetchCounts = async () => {
@@ -65,50 +69,37 @@ function Dashboard() {
             });
         }
     }, [departments, employees]);
+
+    // Check if the user is an admin
+    const decoded = user?.token ? JSON.parse(atob(user.token.split('.')[1])) : null;
+    const isAdmin = decoded?.role === "Admin";
+
     return (
         <div className="flex">
             <Sidebar />
 
             <div className="flex-1 p-6 bg-gray-900 text-white"> {/* Matches sidebar theme */}
-
-
                 <h1 className="text-3xl font-bold mb-8 text-gray-100">Dashboard</h1>
 
-
+                {/* Common HR Functionalities */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-gray-800 shadow-md rounded-lg p-6 text-center border border-gray-700 hover:shadow-lg transition">
-                        <h2 className="text-lg font-semibold uppercase text-gray-400">
-                            Total Employees
-                        </h2>
-                        <p className="text-4xl font-bold text-blue-400 mt-2">
-                            {employeeCount}
-                        </p>
+                        <h2 className="text-lg font-semibold uppercase text-gray-400">Total Employees</h2>
+                        <p className="text-4xl font-bold text-blue-400 mt-2">{employeeCount}</p>
                     </div>
-
                     <div className="bg-gray-800 shadow-md rounded-lg p-6 text-center border border-gray-700 hover:shadow-lg transition">
-                        <h2 className="text-lg font-semibold uppercase text-gray-400">
-                            Total Departments
-                        </h2>
-                        <p className="text-4xl font-bold text-green-400 mt-2">
-                            {departmentCount}
-                        </p>
+                        <h2 className="text-lg font-semibold uppercase text-gray-400">Total Departments</h2>
+                        <p className="text-4xl font-bold text-green-400 mt-2">{departmentCount}</p>
                     </div>
-
                     <div className="bg-gray-800 shadow-md rounded-lg p-6 text-center border border-gray-700 hover:shadow-lg transition">
-                        <h2 className="text-lg font-semibold uppercase text-gray-400">
-                            Total Benefits
-                        </h2>
-                        <p className="text-4xl font-bold text-purple-400 mt-2">
-                            {benefitsCount}
-                        </p>
+                        <h2 className="text-lg font-semibold uppercase text-gray-400">Total Benefits</h2>
+                        <p className="text-4xl font-bold text-purple-400 mt-2">{benefitsCount}</p>
                     </div>
                 </div>
 
                 {/* Chart Section */}
                 <div className="bg-gray-800 shadow-md rounded-lg p-8 mt-8 border border-gray-700">
-                    <h2 className="text-2xl font-semibold text-gray-300 mb-6">
-                        Employee Count per Department
-                    </h2>
+                    <h2 className="text-2xl font-semibold text-gray-300 mb-6">Employee Count per Department</h2>
                     {chartData ? (
                         <div className="w-full h-96">
                             <Bar
@@ -146,10 +137,15 @@ function Dashboard() {
                         <p className="text-gray-400 text-center">Loading chart...</p>
                     )}
                 </div>
+
+
+
+                {isAdmin && <AdminFeatures />}
+
             </div>
+
         </div>
     );
-
 }
 
 export default Dashboard;
