@@ -25,7 +25,7 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Generate JWT token with user ID and role
+
         const token = jwt.sign(
             { id: user.id, role: user.role },
             process.env.JWT_SECRET,
@@ -34,6 +34,28 @@ exports.login = async (req, res) => {
 
         res.json({ token });
     } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// controllers/authController.js
+exports.createHRUser = async (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    try {
+        // Register a new user with the role 'HR'
+        await User.register(username, email, password, 'HR');
+        res.status(201).json({ message: 'HR user created successfully' });
+    } catch (error) {
+        if (error.code === '23505') { // PostgreSQL unique constraint violation
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+
         console.error(error);
         res.status(500).json({ message: 'Server error' });
     }
