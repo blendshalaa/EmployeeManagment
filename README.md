@@ -4,6 +4,11 @@ A web-based application to manage employees, departments, and employee benefits 
 
 ---
 
+![Employee 1](images/employee1.png)
+![Employee 2](images/employee2.png)
+![Employee 3](images/employee3.png)
+![Employee 4](images/employee4.png)
+
 ## Features  
 
 - **Employee Management**: Add, edit, view, and delete employee details.  
